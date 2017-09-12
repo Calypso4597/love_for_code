@@ -1,253 +1,276 @@
 <!DOCTYPE html>
 <html>
-	<head>
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>GALACTIC SUPERHEROES</title>
 
-	</head>
-<body>
-<center>
-		<canvas id="canvas" width="800" height="600">
+<head>
+    <!DOCTYPE html>
+    <html>
+
+    <head>
+        <title>GALACTIC SUPERHEROES</title>
+
+    </head>
+    <style>
+        body {
+            padding: 0px;
+            margin: 0px;
+            overflow: hidden;
+        }
+        
+        canvas {
+            padding: 0px;
+            margin: 0px;
+            overflow: hidden;
+        }
+
+    </style>
+
+    <body>
+        <center>
+            <canvas id="canvas" width="800" height="600">
 			</canvas>
-		<script language="javascript" src="howler.js"> </script>
-		<script>
-		var sound = new Howl({
-  		urls: ['bounce.mp3', 'bounce.ogg']
-		}).play();
-		</script>
-		<script>
-		var c=document.getElementById("canvas");
-		var ctx= c.getContext("2d");
-		
-		ctx.canvas.width  = window.innerWidth;
-  		ctx.canvas.height = window.innerHeight;
+            <script language="javascript" src="howler.js">
 
-		var w = canvas.width;
-		var h = canvas.height;
-        
-		var num=100;
-		var stars=[];
-		var size=2;
-        
-		for(var i=0;i<num;i++){
-		stars[i]=new Star();
-		}
 
-		var px=w/2;
-		var py=500;
-        
-		var pw=50;
-		var ph=50;
+            </script>
+            <script>
+                var sound = new Howl({
+                    urls: ['bounce.mp3', 'bounce.ogg']
+                }).play();
 
-		var enemiest=5;
-		var enemies = [];
-		var ex = 50;
-		var ey = -45;
-		var ew = 50;
-		var eh = 50;
-		var speed = 3;
+            </script>
+            <script>
+                var c = document.getElementById("canvas");
+                var ctx = c.getContext("2d");
 
-		var plane;
-		var ene;
+                ctx.canvas.width = window.innerWidth;
+                ctx.canvas.height = window.innerHeight;
 
-		var lasers=2;
-		var laser=[];
+                var w = canvas.width;
+                var h = canvas.height;
 
-		var score=0;
-		var alive=true;		
+                var num = 100;
+                var stars = [];
+                var size = 2;
 
-		var speed=2;
+                for (var i = 0; i < num; i++) {
+                    stars[i] = new Star();
+                }
 
-		var UPKEY=38;
-		var DOWNKEY=40;
-		var LEFTKEY=37;
-		var RIGHTKEY=39;
+                var px = w / 2;
+                var py = 500;
 
-		var controller= new Object();
+                var pw = 50;
+                var ph = 50;
 
-		function toggleKey(keycode,isPressed){
-			if(keycode==UPKEY){
-				controller.up=isPressed;
-			}
-			if(keycode==DOWNKEY){
-				controller.down=isPressed;
-			}
-			if(keycode==LEFTKEY){
-				controller.left=isPressed;
-			}
-			if(keycode==RIGHTKEY){
-				controller.right=isPressed;
-			}
+                var enemiest = 5;
+                var enemies = [];
+                var ex = 50;
+                var ey = -45;
+                var ew = 50;
+                var eh = 50;
+                var speed = 3;
 
-		}
+                var plane;
+                var ene;
 
-		for (var i = 0; i < enemiest; i++) {
-  		enemies.push([ex, ey, ew, eh, speed]);
-  		ex += ew + 110;
-		}
+                var lasers = 2;
+                var laser = [];
 
-		function drawEnemies(){
-  			for (var i = 0; i < enemies.length; i++) {
-    			ctx.drawImage(ene, enemies[i][0], enemies[i][1]);
-			}
-		}
+                var score = 0;
+                var alive = true;
 
-		function movEnemies(){
-		 for (var i = 0; i < enemies.length; i++) {
-    			if (enemies[i][1] < h) {
-      				enemies[i][1] += enemies[i][4];
-    		} else if (enemies[i][1] > h - 1) {
-      				enemies[i][1] = -45;
-    				}
-			}
-  		}
+                var speed = 2;
 
-		function drawLaser() {
-  			if (laser.length)
-    				for (var i = 0; i < laser.length; i++) {
-      						ctx.fillStyle = 'green';
-      						ctx.fillRect(laser[i][0],laser[i][1],laser[i][2],laser[i][3]);
-    			}
-		}
-		
-		function moveLaser() {
-  			for (var i = 0; i < laser.length; i++) {
-    				if (laser[i][1] > -11) {
-      					laser[i][1] -= 5;
-    				} else if (laser[i][1] < -10) {
-      					laser.splice(i, 1);
-    				}
- 			 }
-		}
+                var UPKEY = 38;
+                var DOWNKEY = 40;
+                var LEFTKEY = 37;
+                var RIGHTKEY = 39;
 
-		function hitTest() {
-  			var remove = false;
-  				for (var i = 0; i < laser.length; i++) {
-    					for (var j = 0; j < enemies.length; j++) {
-      			if (laser[i][1] <= (enemies[j][1] + enemies[j][3]) && laser[i][0] >= enemies[j][0] && laser[i][0] <= (enemies[j][0] + enemies[j][2])) {
-        					remove = true;
-        					enemies.splice(j, 1);
-        					enemies.push([(Math.random() * 500) + 50, -45, ew, eh, speed]);
-						score=score+10;
-      				}
-    		}
-    				if (remove == true) {
-      					laser.splice(i, 1);
-      				remove = false;
-    				}
-  			}
-		}
+                var controller = new Object();
 
-		function totalScore(){
-  			ctx.font = 'bold 20px Arial';
-  			ctx.fillStyle = 'white';
-  			ctx.fillText('Score: ', 10, 30);
-  			ctx.fillText(score, 80, 30);
-			if (!alive) {
-  			ctx.fillText('GAME OVER',350, h/2);
-			}
-		}
+                function toggleKey(keycode, isPressed) {
+                    if (keycode == UPKEY) {
+                        controller.up = isPressed;
+                    }
+                    if (keycode == DOWNKEY) {
+                        controller.down = isPressed;
+                    }
+                    if (keycode == LEFTKEY) {
+                        controller.left = isPressed;
+                    }
+                    if (keycode == RIGHTKEY) {
+                        controller.right = isPressed;
+                    }
 
-		function collide() {
-  			var pxw = px + pw;
-      			var pyh = py + ph;
-  				for (var i = 0; i < enemies.length; i++) {
-    			if (px > enemies[i][0] && px < enemies[i][0] + ew && py > enemies[i][1] && py < enemies[i][1] + eh) {
-			alive=false;
-    			}
-    			if (pxw < enemies[i][0] + ew && pxw > enemies[i][0] && py > enemies[i][1] && py < enemies[i][1] + eh) {
-			alive=false;
-    			}
-    			if (pyh > enemies[i][1] && pyh < enemies[i][1] + eh && px > enemies[i][0] && px < enemies[i][0] + ew) {
-			alive=false;
-    			}
-    			if (pyh > enemies[i][1] && pyh < enemies[i][1] + eh && pxw < enemies[i][0] + ew && pxw > enemies[i][0]) {
-			alive=false;
-    			}
-			
-  		}
-		}
-		
+                }
 
-		function Star(){
-		this.x=Math.random()*w;
-		this.y=Math.random()*h;
-		this.move=function(){
-		this.y=this.y+4;
-		if(this.y>=h){
-		this.y=0;
-		}
-		}
-		this.show=function(){
-			ctx.beginPath();
-			ctx.fillStyle="white";
-			ctx.arc(this.x,this.y,size,0,Math.PI*2);
-			ctx.fill();
-		}
-		}
+                for (var i = 0; i < enemiest; i++) {
+                    enemies.push([ex, ey, ew, eh, speed]);
+                    ex += ew + 110;
+                }
 
-		function drawPlayer(){
-			ctx.drawImage(plane,px,py);
-		}
-		
-		function handle(){	
-			if(controller.up){
-				py += 5;
-			}
-			if(controller.down){
-				py -= 5;
-			}
-			if(controller.left){
-				px -= 5;
-			}
-			if(controller.right){
-				px += 5;
-			}
-		}
+                function drawEnemies() {
+                    for (var i = 0; i < enemies.length; i++) {
+                        ctx.drawImage(ene, enemies[i][0], enemies[i][1]);
+                    }
+                }
 
-		document.onkeydown=function (evt) {
-			toggleKey(evt.keycode,true);
-		};
+                function movEnemies() {
+                    for (var i = 0; i < enemies.length; i++) {
+                        if (enemies[i][1] < h) {
+                            enemies[i][1] += enemies[i][4];
+                        } else if (enemies[i][1] > h - 1) {
+                            enemies[i][1] = -45;
+                        }
+                    }
+                }
 
-		document.onkeyup=function (evt) {
-			toggleKey(evt.keycode,false);
-		};
+                function drawLaser() {
+                    if (laser.length)
+                        for (var i = 0; i < laser.length; i++) {
+                            ctx.fillStyle = 'green';
+                            ctx.fillRect(laser[i][0], laser[i][1], laser[i][2], laser[i][3]);
+                        }
+                }
 
-		function draw(){
-		ctx.fillStyle = "#05071F";
-		ctx.fillRect(0,0,w,h);
-		plane=new Image();
-		plane.src="plane.png";
-		ene=new Image();
-		ene.src="enemy.png";
-		for(var i=0;i<num;i++){
-		stars[i].show();
-		stars[i].move();
-        	}
-		if(alive){
-		hitTest();
-		drawPlayer();
-		movEnemies();
-		drawEnemies();
-		handle();
-		moveLaser();
-		drawLaser();
-		collide();
-		}
-		totalScore();
-		}
-		 	
-		function update(){
-		draw();
-		window.requestAnimationFrame(update);
-		}
+                function moveLaser() {
+                    for (var i = 0; i < laser.length; i++) {
+                        if (laser[i][1] > -11) {
+                            laser[i][1] -= 5;
+                        } else if (laser[i][1] < -10) {
+                            laser.splice(i, 1);
+                        }
+                    }
+                }
 
-		update();
-		</script>
-			}
-</center>
+                function hitTest() {
+                    var remove = false;
+                    for (var i = 0; i < laser.length; i++) {
+                        for (var j = 0; j < enemies.length; j++) {
+                            if (laser[i][1] <= (enemies[j][1] + enemies[j][3]) && laser[i][0] >= enemies[j][0] && laser[i][0] <= (enemies[j][0] + enemies[j][2])) {
+                                remove = true;
+                                enemies.splice(j, 1);
+                                enemies.push([(Math.random() * 500) + 50, -45, ew, eh, speed]);
+                                score = score + 10;
+                            }
+                        }
+                        if (remove == true) {
+                            laser.splice(i, 1);
+                            remove = false;
+                        }
+                    }
+                }
 
-</body>
-</html>
+                function totalScore() {
+                    ctx.font = 'bold 20px Arial';
+                    ctx.fillStyle = 'white';
+                    ctx.fillText('Score: ', 10, 30);
+                    ctx.fillText(score, 80, 30);
+                    if (!alive) {
+                        ctx.fillText('GAME OVER', 350, h / 2);
+                    }
+                }
+
+                function collide() {
+                    var pxw = px + pw;
+                    var pyh = py + ph;
+                    for (var i = 0; i < enemies.length; i++) {
+                        if (px > enemies[i][0] && px < enemies[i][0] + ew && py > enemies[i][1] && py < enemies[i][1] + eh) {
+                            alive = false;
+                        }
+                        if (pxw < enemies[i][0] + ew && pxw > enemies[i][0] && py > enemies[i][1] && py < enemies[i][1] + eh) {
+                            alive = false;
+                        }
+                        if (pyh > enemies[i][1] && pyh < enemies[i][1] + eh && px > enemies[i][0] && px < enemies[i][0] + ew) {
+                            alive = false;
+                        }
+                        if (pyh > enemies[i][1] && pyh < enemies[i][1] + eh && pxw < enemies[i][0] + ew && pxw > enemies[i][0]) {
+                            alive = false;
+                        }
+
+                    }
+                }
+
+
+                function Star() {
+                    this.x = Math.random() * w;
+                    this.y = Math.random() * h;
+                    this.move = function() {
+                        this.y = this.y + 4;
+                        if (this.y >= h) {
+                            this.y = 0;
+                        }
+                    }
+                    this.show = function() {
+                        ctx.beginPath();
+                        ctx.fillStyle = "white";
+                        ctx.arc(this.x, this.y, size, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+
+                function drawPlayer() {
+                    ctx.drawImage(plane, px, py);
+                }
+
+                function handle() {
+                    if (controller.up) {
+                        py += 5;
+                    }
+                    if (controller.down) {
+                        py -= 5;
+                    }
+                    if (controller.left) {
+                        px -= 5;
+                    }
+                    if (controller.right) {
+                        px += 5;
+                    }
+                }
+
+                document.onkeydown = function(evt) {
+                    toggleKey(evt.keycode, true);
+                };
+
+                document.onkeyup = function(evt) {
+                    toggleKey(evt.keycode, false);
+                };
+
+                function draw() {
+                    ctx.fillStyle = "#05071F";
+                    ctx.fillRect(0, 0, w, h);
+                    plane = new Image();
+                    plane.src = "plane.png";
+                    ene = new Image();
+                    ene.src = "enemy.png";
+                    for (var i = 0; i < num; i++) {
+                        stars[i].show();
+                        stars[i].move();
+                    }
+                    if (alive) {
+                        hitTest();
+                        drawPlayer();
+                        movEnemies();
+                        drawEnemies();
+                        handle();
+                        moveLaser();
+                        drawLaser();
+                        collide();
+                    }
+                    totalScore();
+                }
+
+                function update() {
+                    draw();
+                    window.requestAnimationFrame(update);
+                }
+
+                update();
+
+            </script>
+            }
+        </center>
+
+    </body>
+
+    </html>
