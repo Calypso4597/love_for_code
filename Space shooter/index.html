@@ -11,9 +11,18 @@
 <center>
 		<canvas id="canvas" width="800" height="600">
 			</canvas>
+		<script language="javascript" src="howler.js"> </script>
+		<script>
+		var sound = new Howl({
+  		urls: ['bounce.mp3', 'bounce.ogg']
+		}).play();
+		</script>
 		<script>
 		var c=document.getElementById("canvas");
 		var ctx= c.getContext("2d");
+		
+		ctx.canvas.width  = window.innerWidth;
+  		ctx.canvas.height = window.innerHeight;
 
 		var w = canvas.width;
 		var h = canvas.height;
@@ -48,6 +57,31 @@
 
 		var score=0;
 		var alive=true;		
+
+		var speed=2;
+
+		var UPKEY=38;
+		var DOWNKEY=40;
+		var LEFTKEY=37;
+		var RIGHTKEY=39;
+
+		var controller= new Object();
+
+		function toggleKey(keycode,isPressed){
+			if(keycode==UPKEY){
+				controller.up=isPressed;
+			}
+			if(keycode==DOWNKEY){
+				controller.down=isPressed;
+			}
+			if(keycode==LEFTKEY){
+				controller.left=isPressed;
+			}
+			if(keycode==RIGHTKEY){
+				controller.right=isPressed;
+			}
+
+		}
 
 		for (var i = 0; i < enemiest; i++) {
   		enemies.push([ex, ey, ew, eh, speed]);
@@ -153,27 +187,33 @@
 			ctx.fill();
 		}
 		}
-		
+
 		function drawPlayer(){
 			ctx.drawImage(plane,px,py);
-			window.onkeydown = function(e) {
-   			var key = e.keyCode ? e.keyCode : e.which;
-
-   				if (key == 40) {
-       					py += 5;
-   				}else if (key == 38) {
-       					py -= 5;
-   				}
-				if (key == 39) {
-       					px += 5;
-   				}else if (key == 37) {
-       					px -= 5;
-   				}
-				if (key == 32 && laser.length <= lasers) laser.push([px + 25, py - 20, 4, 20]);
-
-			}
-
 		}
+		
+		function handle(){	
+			if(controller.up){
+				py += 5;
+			}
+			if(controller.down){
+				py -= 5;
+			}
+			if(controller.left){
+				px -= 5;
+			}
+			if(controller.right){
+				px += 5;
+			}
+		}
+
+		document.onkeydown=function (evt) {
+			toggleKey(evt.keycode,true);
+		};
+
+		document.onkeyup=function (evt) {
+			toggleKey(evt.keycode,false);
+		};
 
 		function draw(){
 		ctx.fillStyle = "#05071F";
@@ -191,6 +231,7 @@
 		drawPlayer();
 		movEnemies();
 		drawEnemies();
+		handle();
 		moveLaser();
 		drawLaser();
 		collide();
@@ -205,6 +246,7 @@
 
 		update();
 		</script>
+			}
 </center>
 
 </body>
