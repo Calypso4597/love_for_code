@@ -227,13 +227,15 @@
                         px += 5;
                     }
                 }
+                
+                
 
                 document.onkeydown = function(evt) {
-                    toggleKey(evt.keycode, true);
+                    toggleKey(evt.which, true);
                 };
 
                 document.onkeyup = function(evt) {
-                    toggleKey(evt.keycode, false);
+                    toggleKey(evt.which, false);
                 };
 
                 function draw() {
