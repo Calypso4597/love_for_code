@@ -34,8 +34,9 @@
             </script>
             <script>
                 var sound = new Howl({
-                    urls: ['bounce.mp3', 'bounce.ogg']
-                }).play();
+                    src: 'bounce.mp3'
+                });
+                //console.log(sound);
 
             </script>
             <script>
@@ -81,8 +82,8 @@
 
                 var speed = 2;
 
-                var UPKEY = 38;
-                var DOWNKEY = 40;
+                var UPKEY = 40;
+                var DOWNKEY = 38;
                 var LEFTKEY = 37;
                 var RIGHTKEY = 39;
 
@@ -227,8 +228,8 @@
                         px += 5;
                     }
                 }
-                
-                
+
+
 
                 document.onkeydown = function(evt) {
                     toggleKey(evt.which, true);
