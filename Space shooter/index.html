@@ -34,9 +34,12 @@
             </script>
             <script>
                 var sound = new Howl({
-                    src: 'bounce.mp3'
+                    src: 'laser.mp3'
                 });
-                //console.log(sound);
+
+                var sound1 = new Howl({
+                    src: 'crash.mp3'
+                });
 
             </script>
             <script>
@@ -86,6 +89,7 @@
                 var DOWNKEY = 38;
                 var LEFTKEY = 37;
                 var RIGHTKEY = 39;
+				var SPACE=32;
 
                 var controller = new Object();
 
@@ -101,6 +105,9 @@
                     }
                     if (keycode == RIGHTKEY) {
                         controller.right = isPressed;
+                    }
+			if (keycode == SPACE) {
+                        controller.space = isPressed;
                     }
 
                 }
@@ -178,15 +185,19 @@
                     for (var i = 0; i < enemies.length; i++) {
                         if (px > enemies[i][0] && px < enemies[i][0] + ew && py > enemies[i][1] && py < enemies[i][1] + eh) {
                             alive = false;
+                            sound1.play();
                         }
                         if (pxw < enemies[i][0] + ew && pxw > enemies[i][0] && py > enemies[i][1] && py < enemies[i][1] + eh) {
                             alive = false;
+                            sound1.play();
                         }
                         if (pyh > enemies[i][1] && pyh < enemies[i][1] + eh && px > enemies[i][0] && px < enemies[i][0] + ew) {
                             alive = false;
+                            sound1.play();
                         }
                         if (pyh > enemies[i][1] && pyh < enemies[i][1] + eh && pxw < enemies[i][0] + ew && pxw > enemies[i][0]) {
                             alive = false;
+                            sound1.play();
                         }
 
                     }
@@ -226,6 +237,10 @@
                     }
                     if (controller.right) {
                         px += 5;
+                    }
+		   if (controller.space && laser.length <= lasers) {
+                   	laser.push([px + 25, py - 20, 4, 20]);
+                   	sound.play();
                     }
                 }
 
