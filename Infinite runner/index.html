@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <title>INFINITE RUNNER</title>
+    </head>
+
+  <body>
+  <center>
+  <canvas id="canvas" width="800" height="600">
+			</canvas>
+			<script>
+			var c = document.getElementById("canvas");
+                var ctx = c.getContext("2d");
+
+               var w=canvas.width;
+               var h=canvas.height;
+
+               var num=100;
+               var pillars=[];
+
+               var ph=200;
+               var pw=100;
+
+              	for (var i = 0; i < num; i++) {
+                    pillars[i] = new Pillar();
+                }
+
+
+               function Pillar(){
+
+               		this.x = w;
+                    this.y = 400;
+                    this.pw=pw;
+                    this.ph=ph;
+               
+                    this.move = function() {
+                        this.x = this.x - 3;
+                        if (this.x <= -100) {
+                            this.x = w;
+                        }
+                    }
+                    this.show=function(){
+               		ctx.fillStyle = "#ffffff";
+                    ctx.fillRect(this.x,this.y,pw,ph);
+                }
+
+             }
+               	function draw(){
+               		ctx.fillStyle = "#000000";
+                    ctx.fillRect(0, 0, w, h);
+
+         			for (var i = 0; i < num; i++) {
+                        pillars[i].show();
+                        pillars[i].move();
+                    }
+               	}
+
+
+               function update() {
+                    draw();
+                    window.requestAnimationFrame(update);
+                }
+
+                update();
+
+                </script>
+                </center>
+
+     </body>
+     </html>
