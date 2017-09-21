@@ -9,7 +9,7 @@
   <canvas id="canvas" width="800" height="600">
 			</canvas>
 			<script>
-			var c = document.getElementById("canvas");
+				var c = document.getElementById("canvas");
                 var ctx = c.getContext("2d");
 
                var w=canvas.width;
@@ -21,22 +21,40 @@
                var ph=200;
                var pw=100;
 
+               var plx=20;
+               var ply=500;
+
+               var SPACE=32;
+               var gravity=0.2;
+               var gravitySpeed=0;
+
+               
+
               	for (var i = 0; i < num; i++) {
                     pillars[i] = new Pillar();
                 }
 
+                var controller = new Object();
+
+                function toggleKey(keycode, isPressed) {
+                  	if (keycode == SPACE) {
+                        controller.space = isPressed;
+                    }
+
+                }
 
                function Pillar(){
 
                		this.x = w;
                     this.y = 400;
                     this.pw=pw;
-                    this.ph=ph;
+       				this.ph=ph;
                
                     this.move = function() {
-                        this.x = this.x - 3;
+                        this.x = this.x - 5;
                         if (this.x <= -100) {
                             this.x = w;
+                            this.ph=Math.random()*ph;
                         }
                     }
                     this.show=function(){
@@ -45,14 +63,63 @@
                 }
 
              }
+
+             	function moon(){
+             			ctx.beginPath();
+                        ctx.fillStyle = "white";
+                        ctx.arc(400, 70, 20, 0, Math.PI * 2);
+                        ctx.fill();
+             	}
+
+
+             	function drawPlayer(){
+             		ctx.drawImage(player, plx, ply);
+             	}
+
+             	function handle() {
+             
+		   		if (controller.space) {
+		   				ply=ply-7;
+                   		gravitySpeed +=gravity;
+        				ply += gravitySpeed;
+        				hit();
+                    }
+
+                  this.hit=function() {
+        				var bottom = h - 100;
+        					if (ply > bottom) {
+            					ply = bottom;
+        				}
+    				}  
+                }
+
+                
+                document.onkeydown = function(evt) {
+                    toggleKey(evt.which, true);
+                };
+
+                document.onkeyup = function(evt) {
+                    toggleKey(evt.which, false);
+                };
+
+					
+
                	function draw(){
                		ctx.fillStyle = "#000000";
                     ctx.fillRect(0, 0, w, h);
+                    player = new Image();
+                    player.src = "player.png";
 
          			for (var i = 0; i < num; i++) {
                         pillars[i].show();
                         pillars[i].move();
                     }
+
+                   	moon();
+                   	drawPlayer();
+                   	handle();
+
+                   	
                	}
 
 
