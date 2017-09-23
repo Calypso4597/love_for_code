@@ -1,137 +1,92 @@
 <!DOCTYPE html>
 <html>
 <head>
-        <title>INFINITE RUNNER</title>
-    </head>
+<style>
+canvas {
+    background-color: #000000;
+}
+</style>
+</head>
+<body onload="startGame()">
+<script>
 
-  <body>
-  <center>
-  <canvas id="canvas" width="800" height="600">
-			</canvas>
-			<script>
-				var c = document.getElementById("canvas");
-                var ctx = c.getContext("2d");
+var player;
+var pillars = [];
 
-               var w=canvas.width;
-               var h=canvas.height;
+function startGame() {
+    player = new component(100, 100, "player.png", 20, 500, "image");
+    main.start();
+}
 
-               var num=100;
-               var pillars=[];
+var main = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = 800;
+        this.canvas.height = 600;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        this.frame = 0;
+        this.interval = setInterval(updateMain, 12);
+        },
+    clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }    
+}
 
-               var ph=200;
-               var pw=100;
+function component(width, height, color, x, y,type) {
+     this.type = type;
+    if (type == "image") {
+        this.image = new Image();
+        this.image.src = color;
+    }
+    this.width = width;
+    this.height = height;   
+    this.x = x;
+    this.y = y;    
+    this.update = function() {
+        ctx = main.context;
+        if (type == "image") {
+            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+            }
+            
+            else {
+            ctx.fillStyle = color;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+            }
+        }
+}
 
-               var plx=20;
-               var ply=500;
+function moon(){
+            c=main.context;
+            c.beginPath();
+            c.fillStyle = "white";
+            c.arc(400, 70, 20, 0, Math.PI * 2);
+            c.fill();
+        }
 
-               var SPACE=32;
-               var gravity=0.2;
-               var gravitySpeed=0;
+function updateMain() {
+    var x, y;
+    var pw=60;
+    var ph=150 + Math.random()*120;
+    main.clear();
+    main.frame += 1;
+    if (main.frame == 1 || everyinterval(200)) {
+        x = main.canvas.width;
+        y = main.canvas.height-ph;
+        pillars.push(new component(pw, ph, "white", x, y));
+    }
+    for (i = 0; i < pillars.length; i += 1) {
+        pillars[i].x += -2;
+        pillars[i].update();
+    }    
+    player.update();
+    moon();
+}
 
-               
-
-              	for (var i = 0; i < num; i++) {
-                    pillars[i] = new Pillar();
-                }
-
-                var controller = new Object();
-
-                function toggleKey(keycode, isPressed) {
-                  	if (keycode == SPACE) {
-                        controller.space = isPressed;
-                    }
-
-                }
-
-               function Pillar(){
-
-               		this.x = w;
-                    this.y = 400;
-                    this.pw=pw;
-       				this.ph=ph;
-               
-                    this.move = function() {
-                        this.x = this.x - 5;
-                        if (this.x <= -100) {
-                            this.x = w;
-                            this.ph=Math.random()*ph;
-                        }
-                    }
-                    this.show=function(){
-               		ctx.fillStyle = "#ffffff";
-                    ctx.fillRect(this.x,this.y,pw,ph);
-                }
-
-             }
-
-             	function moon(){
-             			ctx.beginPath();
-                        ctx.fillStyle = "white";
-                        ctx.arc(400, 70, 20, 0, Math.PI * 2);
-                        ctx.fill();
-             	}
-
-
-             	function drawPlayer(){
-             		ctx.drawImage(player, plx, ply);
-             	}
-
-             	function handle() {
-             
-		   		if (controller.space) {
-		   				ply=ply-7;
-                   		gravitySpeed +=gravity;
-        				ply += gravitySpeed;
-        				hit();
-                    }
-
-                  this.hit=function() {
-        				var bottom = h - 100;
-        					if (ply > bottom) {
-            					ply = bottom;
-        				}
-    				}  
-                }
-
-                
-                document.onkeydown = function(evt) {
-                    toggleKey(evt.which, true);
-                };
-
-                document.onkeyup = function(evt) {
-                    toggleKey(evt.which, false);
-                };
-
-					
-
-               	function draw(){
-               		ctx.fillStyle = "#000000";
-                    ctx.fillRect(0, 0, w, h);
-                    player = new Image();
-                    player.src = "player.png";
-
-         			for (var i = 0; i < num; i++) {
-                        pillars[i].show();
-                        pillars[i].move();
-                    }
-
-                   	moon();
-                   	drawPlayer();
-                   	handle();
-
-                   	
-               	}
-
-
-               function update() {
-                    draw();
-                    window.requestAnimationFrame(update);
-                }
-
-                update();
-
-                </script>
-                </center>
-
-     </body>
-     </html>
+function everyinterval(n) {
+       if ((main.frame / n) % 1 == 0) {return true;}
+    return false;
+}
+</script>
+</body>
+</html>
