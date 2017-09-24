@@ -12,9 +12,25 @@ canvas {
 
 var player;
 var pillars = [];
+ var spriteWidth = 956; 
+ var spriteHeight = 189; 
+
+ var rows = 1; 
+ var cols = 8; 
+  
+ var swidth = spriteWidth/cols; 
+ 
+ var sheight = spriteHeight/rows; 
+ 
+ var curFrame = 0; 
+ 
+ var frameCount = 8; 
+ 
+ var srcX=0; 
+ var srcY=0; 
 
 function startGame() {
-    player = new component(100, 100, "player.png", 20, 500, "image");
+    player = new component(50, 50, "sprite.png", 20, 430, "image");
     main.start();
 }
 
@@ -33,12 +49,19 @@ var main = {
     }    
 }
 
+function updateFrame(){
+ curFrame = ++curFrame % frameCount;
+ srcX = curFrame * swidth;
+    ct=main.context;
+    ct.clearRect(20,430,swidth,sheight);
+}
+
 function component(width, height, color, x, y,type) {
      this.type = type;
     if (type == "image") {
         this.image = new Image();
         this.image.src = color;
-    }
+    } 
     this.width = width;
     this.height = height;   
     this.x = x;
@@ -46,7 +69,8 @@ function component(width, height, color, x, y,type) {
     this.update = function() {
         ctx = main.context;
         if (type == "image") {
-            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+            updateFrame();
+            ctx.drawImage(this.image,srcX,srcY,swidth,sheight,this.x,this.y,swidth,sheight);
             }
             
             else {
