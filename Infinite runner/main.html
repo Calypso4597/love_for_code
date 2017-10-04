@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <style>
 canvas {
     background-color: #000000;
@@ -18,7 +19,6 @@ var pillars = [];
 
  var rows = 2; 
  var cols = 8;
- ; 
   
  var swidth = spriteWidth/cols; 
  
@@ -32,7 +32,7 @@ var pillars = [];
  var srcY=0; 
 
 function startGame() {
-    player = new component(50, 50, "character.png", 20, 430, "image");
+    player = new component(50, 50, "character.png", 20, 470, "image");
     main.start();
 }
 
@@ -48,7 +48,13 @@ var main = {
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frame = 0;
         this.interval = setInterval(updateMain, 12);
-        },
+        window.addEventListener('keydown', function (e) {
+            main.key = e.keyCode;
+        })
+        window.addEventListener('keyup', function (e) {
+            main.key = false;
+        })
+    },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }    
@@ -70,7 +76,11 @@ function component(width, height, color, x, y,type) {
     this.width = width;
     this.height = height;   
     this.x = x;
-    this.y = y;    
+    this.y = y;
+    this.speedX = 0;
+    this.speedY = 0;
+    this.gravity = 0;
+    this.gravitySpeed = 0;       
     this.update = function() {
         ctx = main.context;
         if (type == "image") {
@@ -83,6 +93,19 @@ function component(width, height, color, x, y,type) {
             ctx.fillRect(this.x, this.y, this.width, this.height);
             }
         }
+         this.newPos = function() {
+        this.gravitySpeed += this.gravity;
+        this.x += this.speedX;
+        this.y += this.speedY + this.gravitySpeed;
+        this.hitBottom();
+    }
+    this.hitBottom = function() {
+        var rockbottom = main.canvas.height -130;
+        if (this.y > rockbottom) {
+            this.y = rockbottom;
+            this.gravitySpeed = 0;
+        }
+    }
 }
 
 function moon(){
@@ -107,7 +130,15 @@ function updateMain() {
     for (i = 0; i < pillars.length; i += 1) {
         pillars[i].x += -2;
         pillars[i].update();
-    }    
+    } 
+    if (main.key && main.key == 32) {
+         accelerate(-0.9);
+         var value = true;
+    }
+    if(!value){
+        accelerate(0.5);
+    }
+    player.newPos();    
     player.update();
     moon();
 }
@@ -116,6 +147,13 @@ function everyinterval(n) {
        if ((main.frame / n) % 1 == 0) {return true;}
     return false;
 }
+function accelerate(n) {
+    if (!main.interval) {
+        main.interval = setInterval(updateMain, 20);
+    }
+    player.gravity = n;
+}
 </script>
+<br>
 </body>
 </html>
