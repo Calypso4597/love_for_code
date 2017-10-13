@@ -5,10 +5,30 @@
 <style>
 canvas {
     background-color: #000000;
-}
+            padding: 0px;
+            margin: 0px;
+            overflow: hidden;
+        }
+
+        body {
+            padding: 0px;
+            margin: 0px;
+            overflow: hidden;
+        }
+
+    </style>
+
 </style>
 </head>
 <body onload="startGame()">
+ <script language="javascript" src="howler.js">
+ </script>
+            <script>
+                var sound = new Howl({
+                    src: 'jump.mp3'
+                });
+
+            </script>
 <script>
 
 var player;
@@ -31,6 +51,8 @@ var pillars = [];
  var srcX=0; 
  var srcY=0; 
 
+ var score=0;
+
 function startGame() {
     player = new component(50, 50, "character.png", 20, 470, "image");
     main.start();
@@ -50,6 +72,7 @@ var main = {
         this.interval = setInterval(updateMain, 12);
         window.addEventListener('keydown', function (e) {
             main.key = e.keyCode;
+            sound.play();
         })
         window.addEventListener('keyup', function (e) {
             main.key = false;
@@ -57,7 +80,10 @@ var main = {
     },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }    
+    },
+    stop : function() {
+        clearInterval(this.interval);
+    }   
 }
 
 function updateFrame(){
@@ -106,6 +132,21 @@ function component(width, height, color, x, y,type) {
             this.gravitySpeed = 0;
         }
     }
+     this.crashWith = function(otherobj) {
+        var myleft = this.x;
+        var myright = this.x + (100);
+        var mytop = this.y;
+        var mybottom = this.y + (100);
+        var otherleft = otherobj.x;
+        var otherright = otherobj.x + (otherobj.width);
+        var othertop = otherobj.y;
+        var otherbottom = otherobj.y + (otherobj.height);
+        var crash = true;
+        if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+            crash = false;
+        }
+        return crash;
+    }
 }
 
 function moon(){
@@ -115,11 +156,24 @@ function moon(){
             c.arc(400, 70, 20, 0, Math.PI * 2);
             c.fill();
         }
-
+function totalScore() {
+                    ctx.font = 'bold 20px Arial';
+                    ctx.fillStyle = 'white';
+                    ctx.fillText('Score: ', 10, 30);
+                    ctx.fillText(score, 80, 30);
+                }  
 function updateMain() {
     var x, y;
     var pw=60;
     var ph=150 + Math.random()*120;
+    for (i = 0; i < pillars.length; i += 1) {
+        if (player.crashWith(pillars[i])) {
+            ctx=main.context;
+            ctx.fillText('GAME OVER', 350, main.canvas.height / 2);
+            main.stop();
+            return;
+        } 
+    }
     main.clear();
     main.frame += 1;
     if (main.frame == 1 || everyinterval(200)) {
@@ -130,8 +184,9 @@ function updateMain() {
     for (i = 0; i < pillars.length; i += 1) {
         pillars[i].x += -2;
         pillars[i].update();
+        score=score+1; 
     } 
-    if (main.key && main.key == 32) {
+    if (main.key == 32) {
          accelerate(-0.9);
          var value = true;
     }
@@ -141,6 +196,7 @@ function updateMain() {
     player.newPos();    
     player.update();
     moon();
+    totalScore();
 }
 
 function everyinterval(n) {
