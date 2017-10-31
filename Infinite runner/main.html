@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style>
-canvas {
-    background-color: #000000;
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        canvas {
+            background-color: #000000;
             padding: 0px;
             margin: 0px;
             overflow: hidden;
@@ -18,198 +19,211 @@ canvas {
 
     </style>
 
-</style>
+    </style>
 </head>
+
 <body onload="startGame()">
- <script language="javascript" src="howler.js">
- </script>
-            <script>
-                var sound = new Howl({
-                    src: 'jump.mp3'
-                });
+    <script language="javascript" src="howler.js">
 
-            </script>
-<script>
 
-var player;
-var pillars = [];
+    </script>
+    <script>
+        var sound = new Howl({
+            src: 'jump.mp3'
+        });
 
- var spriteWidth = 864; 
- var spriteHeight = 280; 
+    </script>
+    <script>
+        var player;
+        var pillars = [];
 
- var rows = 2; 
- var cols = 8;
-  
- var swidth = spriteWidth/cols; 
- 
- var sheight = spriteHeight/rows; 
- 
- var curFrame = 0; 
- 
- var frameCount = 8; 
- 
- var srcX=0; 
- var srcY=0; 
+        var spriteWidth = 864;
+        var spriteHeight = 280;
 
- var score=0;
+        var rows = 2;
+        var cols = 8;
 
-function startGame() {
-    player = new component(50, 50, "character.png", 20, 470, "image");
-    main.start();
-}
+        var swidth = spriteWidth / cols;
 
-var main = {
-    canvas : document.createElement("canvas"),
-    start : function() {
-        this.canvas.width = 800;
-        this.canvas.height = 600;
-        this.context = this.canvas.getContext("2d");
-        if (this.canvas.requestFullscreen) {
-            this.canvas.requestFullscreen();
+        var sheight = spriteHeight / rows;
+
+        var curFrame = 0;
+
+        var frameCount = 8;
+
+        var srcX = 0;
+        var srcY = 0;
+
+        var score = 0;
+
+        function startGame() {
+            player = new component(50, 50, "character.png", 20, 470, "image");
+            main.start();
         }
-        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-        this.frame = 0;
-        this.interval = setInterval(updateMain, 12);
-        window.addEventListener('keydown', function (e) {
-            main.key = e.keyCode;
-            sound.play();
-        })
-        window.addEventListener('keyup', function (e) {
-            main.key = false;
-        })
-    },
-    clear : function() {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    },
-    stop : function() {
-        clearInterval(this.interval);
-    }   
-}
 
-function updateFrame(){
- curFrame = ++curFrame % frameCount;
- srcX = curFrame * swidth;
-    ctx=main.context;
-    ctx.clearRect(0,0,swidth,sheight);
-}
-
-function component(width, height, color, x, y,type) {
-     this.type = type;
-    if (type == "image") {
-        this.image = new Image();
-        this.image.src = color;
-    } 
-    this.width = width;
-    this.height = height;   
-    this.x = x;
-    this.y = y;
-    this.speedX = 0;
-    this.speedY = 0;
-    this.gravity = 0;
-    this.gravitySpeed = 0;       
-    this.update = function() {
-        ctx = main.context;
-        if (type == "image") {
-            updateFrame();
-            ctx.drawImage(this.image,srcX,srcY,swidth,sheight,this.x,this.y,swidth,sheight);
-            }
-            
-            else {
-            ctx.fillStyle = color;
-            ctx.fillRect(this.x, this.y, this.width, this.height);
+        var main = {
+            canvas: document.createElement("canvas"),
+            start: function() {
+                this.canvas.width = 800;
+                this.canvas.height = 600;
+                this.context = this.canvas.getContext("2d");
+                if (this.canvas.requestFullscreen) {
+                    this.canvas.requestFullscreen();
+                }
+                document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+                this.frame = 0;
+                this.interval = setInterval(updateMain, 12);
+                window.addEventListener('keydown', function(e) {
+                    main.key = e.keyCode;
+                    sound.play();
+                })
+                window.addEventListener('keyup', function(e) {
+                    main.key = false;
+                })
+            },
+            clear: function() {
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            },
+            stop: function() {
+                clearInterval(this.interval);
             }
         }
-         this.newPos = function() {
-        this.gravitySpeed += this.gravity;
-        this.x += this.speedX;
-        this.y += this.speedY + this.gravitySpeed;
-        this.hitBottom();
-    }
-    this.hitBottom = function() {
-        var rockbottom = main.canvas.height -130;
-        if (this.y > rockbottom) {
-            this.y = rockbottom;
+        var counter = 0;
+
+        function updateFrame() {
+            if (counter === 4) {
+                curFrame = ++curFrame % frameCount;
+                srcX = Math.floor(curFrame) * swidth;
+                ctx = main.context;
+                ctx.clearRect(0, 0, swidth, sheight);
+                counter=0;
+            }
+            counter++;
+
+        }
+
+        function component(width, height, color, x, y, type) {
+            this.type = type;
+            if (type == "image") {
+                this.image = new Image();
+                this.image.src = color;
+            }
+            this.width = width;
+            this.height = height;
+            this.x = x;
+            this.y = y;
+            this.speedX = 0;
+            this.speedY = 0;
+            this.gravity = 0;
             this.gravitySpeed = 0;
+            this.update = function() {
+                ctx = main.context;
+                if (type == "image") {
+                    updateFrame();
+                    ctx.drawImage(this.image, srcX, srcY, swidth, sheight, this.x, this.y, swidth, sheight);
+                } else {
+                    ctx.fillStyle = color;
+                    ctx.fillRect(this.x, this.y, this.width, this.height);
+                }
+            }
+            this.newPos = function() {
+                this.gravitySpeed += this.gravity;
+                this.x += this.speedX;
+                this.y += this.speedY + this.gravitySpeed;
+                this.hitBottom();
+            }
+            this.hitBottom = function() {
+                var rockbottom = main.canvas.height - 130;
+                if (this.y >= rockbottom) {
+                    this.y = rockbottom;
+                    this.gravitySpeed = 0;
+                }
+            }
+            this.crashWith = function(otherobj) {
+                var myleft = this.x;
+                var myright = this.x + (100);
+                var mytop = this.y;
+                var mybottom = this.y + (100);
+                var otherleft = otherobj.x;
+                var otherright = otherobj.x + (otherobj.width);
+                var othertop = otherobj.y;
+                var otherbottom = otherobj.y + (otherobj.height);
+                var crash = true;
+                if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+                    crash = false;
+                }
+                return crash;
+            }
         }
-    }
-     this.crashWith = function(otherobj) {
-        var myleft = this.x;
-        var myright = this.x + (100);
-        var mytop = this.y;
-        var mybottom = this.y + (100);
-        var otherleft = otherobj.x;
-        var otherright = otherobj.x + (otherobj.width);
-        var othertop = otherobj.y;
-        var otherbottom = otherobj.y + (otherobj.height);
-        var crash = true;
-        if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
-            crash = false;
-        }
-        return crash;
-    }
-}
 
-function moon(){
-            c=main.context;
+        function moon() {
+            c = main.context;
             c.beginPath();
             c.fillStyle = "white";
             c.arc(400, 70, 20, 0, Math.PI * 2);
             c.fill();
         }
-function totalScore() {
-                    ctx.font = 'bold 20px Arial';
-                    ctx.fillStyle = 'white';
-                    ctx.fillText('Score: ', 10, 30);
-                    ctx.fillText(score, 80, 30);
-                }  
-function updateMain() {
-    var x, y;
-    var pw=60;
-    var ph=150 + Math.random()*120;
-    for (i = 0; i < pillars.length; i += 1) {
-        if (player.crashWith(pillars[i])) {
-            ctx=main.context;
-            ctx.fillText('GAME OVER', 350, main.canvas.height / 2);
-            main.stop();
-            return;
-        } 
-    }
-    main.clear();
-    main.frame += 1;
-    if (main.frame == 1 || everyinterval(200)) {
-        x = main.canvas.width;
-        y = main.canvas.height-ph;
-        pillars.push(new component(pw, ph, "white", x, y));
-    }
-    for (i = 0; i < pillars.length; i += 1) {
-        pillars[i].x += -2;
-        pillars[i].update();
-        score=score+1; 
-    } 
-    if (main.key == 32) {
-         accelerate(-0.9);
-         var value = true;
-    }
-    if(!value){
-        accelerate(0.5);
-    }
-    player.newPos();    
-    player.update();
-    moon();
-    totalScore();
-}
 
-function everyinterval(n) {
-       if ((main.frame / n) % 1 == 0) {return true;}
-    return false;
-}
-function accelerate(n) {
-    if (!main.interval) {
-        main.interval = setInterval(updateMain, 20);
-    }
-    player.gravity = n;
-}
-</script>
-<br>
+        function totalScore() {
+            ctx.font = 'bold 20px Arial';
+            ctx.fillStyle = 'white';
+            ctx.fillText('Score: ', 10, 30);
+            ctx.fillText(score, 80, 30);
+        }
+
+        function updateMain() {
+            var x, y;
+            var pw = 60;
+            var ph = 150 + Math.random() * 120;
+            for (i = 0; i < pillars.length; i += 1) {
+                if (player.crashWith(pillars[i])) {
+                    ctx = main.context;
+                    ctx.fillText('GAME OVER', 350, main.canvas.height / 2);
+                    main.stop();
+                    return;
+                }
+            }
+            main.clear();
+            main.frame += 1;
+            if (main.frame == 1 || everyinterval(200)) {
+                x = main.canvas.width;
+                y = main.canvas.height - ph;
+                pillars.push(new component(pw, ph, "white", x, y));
+            }
+            for (i = 0; i < pillars.length; i += 1) {
+                pillars[i].x += -5;
+                pillars[i].update();
+                score = score + 1;
+            }
+            if (main.key == 32 && player.y >= main.canvas.height - 150) {
+                accelerate(-10);
+                var value = true;
+            }
+            if (!value) {
+                accelerate(0.5);
+            }
+            player.newPos();
+            player.update();
+            moon();
+            totalScore();
+        }
+
+        function everyinterval(n) {
+            if ((main.frame / n) % 1 == 0) {
+                return true;
+            }
+            return false;
+        }
+
+        function accelerate(n) {
+            if (!main.interval) {
+                main.interval = setInterval(updateMain, 20);
+            }
+            player.gravity = n;
+        }
+
+    </script>
+    <br>
 </body>
+
 </html>
