@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head><title>Login Page</title>
+<link rel="shortcut icon" type="image/x-icon" href="logo.ico" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="loginpagecss.css" />
+<script src="loginjavascript.js"></script> 
+</head>
+
+<body>
+<div id="header">
+
+<ul>
+<div></div>
+<li><a href="index.html">Home</a></li>
+<li><a href="display.html">Webpages</a></li>
+<li><a href="queries.html">Support</a></li>
+<li><a href="login.html">Log In</a></li>
+<li><a href="queries.html">ContactUs</a></li>
+</ul>
+</div>
+
+  <div id="loginform">
+  <form name="login" action="loginin.php" method="post"id="form1">
+  <i><b>Log In:</b></i><br >
+  <input type="text" placeholder="Username" name="name" required /><br>
+  <input type="password" placeholder="Password" name="password1" required /><br>
+  <input type="submit" name="submit" value="GO" onClick="loginSubmit()" />
+  <br><input type="button" onclick="myFunction()" value="Don't have an account." /></a>
+  </form>
+  </div> 
+  
+  <div id="signinform">
+  <form name="signin" action="signin.php" method="post" id="form2">
+  <i><b>Sign Up:</b></i><br >
+  <input type="text" placeholder="First Name" name="fname" required /><br>
+  <input type="text" placeholder="Last Name" name="lname" required /><br>
+  <input type="text" placeholder="Email Address" name="email" required /><br>
+  <input type="password" placeholder="Password" name="password2" required /><br>
+  <input type="password" placeholder="Confirm Password" name="cpassword2" onClick="signinSubmit()" required /><br> 
+  <input type="Submit" value="Submit" name="submit"  /><br>
+  <input type="button" value="Already have an account?" onclick="myFunction()" />
+  </form>
+  </div>
+  
+  
+</body>
+</html>
